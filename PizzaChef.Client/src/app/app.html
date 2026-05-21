@@ -1,0 +1,29 @@
+<main class="app-shell" aria-labelledby="page-title">
+  <section class="calculator-panel">
+    <p class="eyebrow">PizzaChef API smoke test</p>
+    <h1 id="page-title">Add-Funktion</h1>
+
+    <dl class="calculation">
+      <div>
+        <dt>Left</dt>
+        <dd>{{ left }}</dd>
+      </div>
+      <div>
+        <dt>Right</dt>
+        <dd>{{ right }}</dd>
+      </div>
+      <div class="result">
+        <dt>Result</dt>
+        <dd data-testid="add-result">
+          @if (result() !== undefined) {
+            {{ result() }}
+          } @else if (error()) {
+            {{ error() }}
+          } @else {
+            Wird geladen
+          }
+        </dd>
+      </div>
+    </dl>
+  </section>
+</main>

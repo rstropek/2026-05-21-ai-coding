@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="PizzaChef.Api/PizzaChef.Api.csproj" />
+  <Project Path="PizzaChef.Core.Tests/PizzaChef.Core.Tests.csproj" />
+  <Project Path="PizzaChef.Core/PizzaChef.Core.csproj" />
+</Solution>
