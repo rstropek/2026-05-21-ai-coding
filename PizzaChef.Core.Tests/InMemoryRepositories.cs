@@ -14,7 +14,7 @@ internal sealed class StubMenuRepository : IMenuRepository
 
 internal sealed class InMemoryOrderRepository : IOrderRepository
 {
-    public List<Order> Saved { get; } = new();
+    public List<Order> Saved { get; } = [];
 
     public Task SaveAsync(Order order, CancellationToken cancellationToken = default)
     {
@@ -24,7 +24,7 @@ internal sealed class InMemoryOrderRepository : IOrderRepository
 
     public Task<IReadOnlyList<Order>> GetByDayAsync(DateOnly day, CancellationToken cancellationToken = default)
     {
-        IReadOnlyList<Order> result = Saved.Where(o => o.Day == day).OrderBy(o => o.CreatedAt).ToList();
+        IReadOnlyList<Order> result = [.. Saved.Where(o => o.Day == day).OrderBy(o => o.CreatedAt)];
         return Task.FromResult(result);
     }
 }

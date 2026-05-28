@@ -34,7 +34,7 @@ public sealed class FileOrderRepository : IOrderRepository
         var dir = GetDayDirectory(day);
         if (!Directory.Exists(dir))
         {
-            return Array.Empty<Order>();
+            return [];
         }
 
         var results = new List<Order>();
@@ -48,9 +48,7 @@ public sealed class FileOrderRepository : IOrderRepository
             }
         }
 
-        return results
-            .OrderBy(o => o.CreatedAt)
-            .ToList();
+        return [.. results.OrderBy(o => o.CreatedAt)];
     }
 
     private string GetDayDirectory(DateOnly day)

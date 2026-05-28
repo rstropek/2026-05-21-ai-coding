@@ -7,12 +7,16 @@ namespace PizzaChef.Core.Services;
 
 public sealed class OrderingClosedException : InvalidOperationException
 {
+    public OrderingClosedException() { }
     public OrderingClosedException(string message) : base(message) { }
+    public OrderingClosedException(string message, Exception innerException) : base(message, innerException) { }
 }
 
 public sealed class OrderValidationException : Exception
 {
+    public OrderValidationException() { }
     public OrderValidationException(string message) : base(message) { }
+    public OrderValidationException(string message, Exception innerException) : base(message, innerException) { }
 }
 
 public sealed class OrderingService : IOrderingService
@@ -104,7 +108,7 @@ public sealed class OrderingService : IOrderingService
             Day: window.Day,
             CreatedAt: _clock.UtcNow,
             EmployeeName: newOrder.EmployeeName.Trim(),
-            Items: newOrder.Items.ToList(),
+            Items: [.. newOrder.Items],
             Notes: string.IsNullOrWhiteSpace(newOrder.Notes) ? null : newOrder.Notes.Trim());
 
         await _orderRepository.SaveAsync(order, cancellationToken);

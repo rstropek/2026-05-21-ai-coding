@@ -4,7 +4,7 @@ using PizzaChef.Core.Storage;
 
 namespace PizzaChef.Core.Tests;
 
-public class FileOrderRepositoryTests : IDisposable
+public sealed class FileOrderRepositoryTests : IDisposable
 {
     private readonly string _tempDir;
 
@@ -32,11 +32,11 @@ public class FileOrderRepositoryTests : IDisposable
             Day: day,
             CreatedAt: DateTimeOffset.UtcNow,
             EmployeeName: "Rainer",
-            Items: new List<OrderLine>
-            {
+            Items:
+            [
                 new("pizza-margherita", "familie", 2),
                 new("coca-cola-033", null, 1),
-            },
+            ],
             Notes: "Ohne Zwiebeln");
 
         await repo.SaveAsync(order);
@@ -65,9 +65,9 @@ public class FileOrderRepositoryTests : IDisposable
         var repo = CreateRepo();
         var day = new DateOnly(2026, 5, 28);
         var first = new Order(Guid.NewGuid(), day, DateTimeOffset.UtcNow.AddMinutes(-10), "A",
-            new List<OrderLine> { new("pizza-margherita", null, 1) }, null);
+            [new("pizza-margherita", null, 1)], null);
         var second = new Order(Guid.NewGuid(), day, DateTimeOffset.UtcNow, "B",
-            new List<OrderLine> { new("pizza-margherita", null, 1) }, null);
+            [new("pizza-margherita", null, 1)], null);
 
         await repo.SaveAsync(second);
         await repo.SaveAsync(first);

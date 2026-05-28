@@ -79,4 +79,4 @@ app.MapGet("/", () => Results.Redirect("/openapi/v1.json"))
 
 app.Run();
 
-public partial class Program { }
+internal sealed partial class Program { }

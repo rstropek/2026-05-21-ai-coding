@@ -69,11 +69,10 @@ public class OrderingServiceTests
 
         var newOrder = new NewOrder(
             "Rainer",
-            new List<OrderLine>
-            {
+            [
                 new("pizza-margherita", "familie", 2),
                 new("coca-cola-033", null, 1),
-            },
+            ],
             "Ohne Zwiebeln");
 
         var order = await service.PlaceOrderAsync(newOrder);
@@ -93,7 +92,7 @@ public class OrderingServiceTests
 
         var newOrder = new NewOrder(
             "Rainer",
-            new List<OrderLine> { new("pizza-margherita", null, 1) },
+            [new("pizza-margherita", null, 1)],
             null);
 
         await Assert.ThrowsAsync<OrderingClosedException>(() => service.PlaceOrderAsync(newOrder));
@@ -108,7 +107,7 @@ public class OrderingServiceTests
 
         var newOrder = new NewOrder(
             "  ",
-            new List<OrderLine> { new("pizza-margherita", null, 1) },
+            [new("pizza-margherita", null, 1)],
             null);
 
         await Assert.ThrowsAsync<OrderValidationException>(() => service.PlaceOrderAsync(newOrder));
@@ -120,7 +119,7 @@ public class OrderingServiceTests
         var utc = new DateTimeOffset(2026, 5, 28, 7, 0, 0, TimeSpan.Zero);
         var service = BuildService(utc, out _);
 
-        var newOrder = new NewOrder("Rainer", new List<OrderLine>(), null);
+        var newOrder = new NewOrder("Rainer", [], null);
 
         await Assert.ThrowsAsync<OrderValidationException>(() => service.PlaceOrderAsync(newOrder));
     }
@@ -133,7 +132,7 @@ public class OrderingServiceTests
 
         var newOrder = new NewOrder(
             "Rainer",
-            new List<OrderLine> { new("pizza-margherita", null, 0) },
+            [new("pizza-margherita", null, 0)],
             null);
 
         await Assert.ThrowsAsync<OrderValidationException>(() => service.PlaceOrderAsync(newOrder));
@@ -147,7 +146,7 @@ public class OrderingServiceTests
 
         var newOrder = new NewOrder(
             "Rainer",
-            new List<OrderLine> { new("pizza-mystery", null, 1) },
+            [new("pizza-mystery", null, 1)],
             null);
 
         await Assert.ThrowsAsync<OrderValidationException>(() => service.PlaceOrderAsync(newOrder));
@@ -161,7 +160,7 @@ public class OrderingServiceTests
 
         var newOrder = new NewOrder(
             "Rainer",
-            new List<OrderLine> { new("pizza-quattro-stagioni", null, 1) },
+            [new("pizza-quattro-stagioni", null, 1)],
             null);
 
         await Assert.ThrowsAsync<OrderValidationException>(() => service.PlaceOrderAsync(newOrder));
@@ -175,7 +174,7 @@ public class OrderingServiceTests
 
         var newOrder = new NewOrder(
             "Rainer",
-            new List<OrderLine> { new("pizza-margherita", "xxl", 1) },
+            [new("pizza-margherita", "xxl", 1)],
             null);
 
         await Assert.ThrowsAsync<OrderValidationException>(() => service.PlaceOrderAsync(newOrder));

@@ -3,7 +3,7 @@ using PizzaChef.Core.Storage;
 
 namespace PizzaChef.Core.Tests;
 
-public class FileMenuRepositoryTests : IDisposable
+public sealed class FileMenuRepositoryTests : IDisposable
 {
     private readonly string _tempDir;
 
