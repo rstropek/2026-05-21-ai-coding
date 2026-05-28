@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "scrapedAt": "2026-05-28T08:14:22+02:00",
+  "source": "https://pizza-gabriel.example/speisekarte",
+  "currency": "EUR",
+  "categories": [
+    { "id": "pizza",    "name": "Pizza",    "sortOrder": 10 },
+    { "id": "pasta",    "name": "Pasta",    "sortOrder": 20 },
+    { "id": "insalata", "name": "Salate",   "sortOrder": 30 },
+    { "id": "bibite",   "name": "Getränke", "sortOrder": 40 },
+    { "id": "dolci",    "name": "Desserts", "sortOrder": 50 }
+  ],
+  "items": [
+    {
+      "id": "pizza-margherita",
+      "categoryId": "pizza",
+      "name": "Pizza Margherita",
+      "description": "Tomatensauce, Mozzarella, Basilikum",
+      "price": 9.90,
+      "variants": [
+        { "id": "normal",  "name": "Normal (30 cm)", "priceDelta": 0.00 },
+        { "id": "familie", "name": "Familie (45 cm)", "priceDelta": 5.00 }
+      ],
+      "allergens": ["A", "G"],
+      "available": true
+    },
+    {
+      "id": "spaghetti-carbonara",
+      "categoryId": "pasta",
+      "name": "Spaghetti alla Carbonara",
+      "description": "Speck, Ei, Pecorino, Pfeffer",
+      "price": 11.50,
+      "variants": [],
+      "allergens": ["A", "C", "G"],
+      "available": true
+    },
+    {
+      "id": "coca-cola-033",
+      "categoryId": "bibite",
+      "name": "Coca-Cola 0,33 l",
+      "description": null,
+      "price": 3.20,
+      "variants": [],
+      "allergens": [],
+      "available": true
+    }
+  ],
+  "allergenLegend": {
+    "A": "Glutenhaltiges Getreide",
+    "C": "Eier",
+    "G": "Milch/Laktose"
+  }
+}

@@ -1,0 +1,5 @@
+* Primärfarbe: #FF5733 (kräftiges Orange, inspiriert von Tomatensauce)
+* Sekundärfarbe: #C70039 (dunkles Rot, inspiriert von Peperoni)
+* Akzentfarbe: #900C3F (dunkles Violett, inspiriert von Auberginen)
+* Hintergrundfarbe: #F0F00 (helles Grau, neutral und freundlich)
+* Textfarbe: #333333 (dunkles Grau, gut lesbar)
