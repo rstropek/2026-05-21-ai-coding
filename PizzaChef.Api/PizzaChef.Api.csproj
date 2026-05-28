@@ -14,4 +14,10 @@
     <ProjectReference Include="..\PizzaChef.Core\PizzaChef.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="data\speisekarte.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

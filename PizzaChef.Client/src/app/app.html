@@ -1,29 +1,169 @@
-<main class="app-shell" aria-labelledby="page-title">
-  <section class="calculator-panel">
-    <p class="eyebrow">PizzaChef API smoke test</p>
-    <h1 id="page-title">Add-Funktion</h1>
+<a class="skip-link" href="#main">Zum Hauptinhalt springen</a>
 
-    <dl class="calculation">
-      <div>
-        <dt>Left</dt>
-        <dd>{{ left }}</dd>
+<header class="app-header" role="banner">
+  <div class="header-inner">
+    <div>
+      <p class="eyebrow">Tagesbestellung</p>
+      <h1>Pizza Gabriel</h1>
+    </div>
+    @if (window(); as w) {
+      <div class="status" [class.status-open]="w.isOpen" [class.status-closed]="!w.isOpen" role="status" aria-live="polite">
+        <span class="status-dot" aria-hidden="true"></span>
+        @if (w.isOpen) {
+          Bestellungen offen bis {{ formatTime(w.cutoffLocal) }}
+        } @else {
+          Bestellfenster geschlossen seit {{ formatTime(w.cutoffLocal) }}
+        }
       </div>
-      <div>
-        <dt>Right</dt>
-        <dd>{{ right }}</dd>
-      </div>
-      <div class="result">
-        <dt>Result</dt>
-        <dd data-testid="add-result">
-          @if (result() !== undefined) {
-            {{ result() }}
-          } @else if (error()) {
-            {{ error() }}
-          } @else {
-            Wird geladen
-          }
-        </dd>
-      </div>
-    </dl>
-  </section>
+    }
+  </div>
+</header>
+
+<main id="main" class="app-main">
+  @if (loadError(); as err) {
+    <div class="alert alert-error" role="alert">{{ err }}</div>
+  }
+
+  @if (!menu()) {
+    <p class="loading">Speisekarte wird geladen …</p>
+  } @else if (window() && !window()!.isOpen) {
+    <div class="alert alert-warn" role="alert">
+      <strong>Bestellungen sind heute geschlossen.</strong>
+      Das Bestellfenster endet täglich um {{ formatTime(window()!.cutoffLocal) }}.
+      Du kannst die Speisekarte ansehen, aber nichts mehr bestellen. Ab 00:00 Uhr ist der nächste Tag offen.
+    </div>
+  }
+
+  @if (menu(); as m) {
+    <section class="layout">
+      <section class="menu-panel" aria-labelledby="menu-heading">
+        <div class="menu-header">
+          <h2 id="menu-heading">Speisekarte</h2>
+          <label class="search">
+            <span class="visually-hidden">Speisekarte durchsuchen</span>
+            <input
+              type="search"
+              placeholder="Suchen (z.B. Margherita, Cola) …"
+              [value]="searchTerm()"
+              (input)="onSearchInput($event)"
+              autocomplete="off"
+              data-testid="menu-search"
+            />
+          </label>
+        </div>
+
+        @if (filteredCategories().length === 0) {
+          <p class="empty">Keine Treffer für "{{ searchTerm() }}".</p>
+        }
+
+        @for (group of filteredCategories(); track group.category.id) {
+          <article class="category">
+            <h3>{{ group.category.name }}</h3>
+            <ul class="items" role="list">
+              @for (item of group.items; track item.id) {
+                <li class="item" [class.item-unavailable]="!item.available">
+                  <div class="item-info">
+                    <div class="item-title">
+                      <span class="item-name">{{ item.name }}</span>
+                      <span class="item-price">{{ formatPrice(asNumber(item.price)) }}</span>
+                    </div>
+                    @if (item.description) {
+                      <p class="item-desc">{{ item.description }}</p>
+                    }
+                    @if (item.allergens.length > 0) {
+                      <p class="item-allergens">Allergene: {{ item.allergens.join(', ') }}</p>
+                    }
+                    @if (!item.available) {
+                      <p class="item-unavailable-text">Aktuell nicht verfügbar</p>
+                    }
+                  </div>
+                  @if (item.available && window()?.isOpen) {
+                    <div class="item-add">
+                      @if (item.variants.length > 0) {
+                        <label class="variant-select">
+                          <span class="visually-hidden">Variante für {{ item.name }}</span>
+                          <select [value]="selectedVariant(item.id)" (change)="onVariantChange(item.id, $event)">
+                            @for (v of item.variants; track v.id) {
+                              <option [value]="v.id">{{ v.name }} ({{ formatPriceDelta(asNumber(v.priceDelta)) }})</option>
+                            }
+                          </select>
+                        </label>
+                      }
+                      <button type="button" class="btn btn-primary" (click)="addToCart(item)" [attr.aria-label]="'Hinzufügen: ' + item.name" [attr.data-testid]="'add-' + item.id">
+                        + Hinzufügen
+                      </button>
+                    </div>
+                  }
+                </li>
+              }
+            </ul>
+          </article>
+        }
+      </section>
+
+      <aside class="cart-panel" aria-labelledby="cart-heading">
+        <h2 id="cart-heading">Bestellung</h2>
+
+        @if (window()?.isOpen) {
+          <form [formGroup]="orderForm" (ngSubmit)="submit()" class="order-form">
+            <label class="field">
+              <span class="field-label">Name *</span>
+              <input type="text" formControlName="employeeName" placeholder="Vor- und Nachname" data-testid="employee-name" required />
+            </label>
+
+            <div class="cart">
+              <h3>Artikel</h3>
+              @if (cart().length === 0) {
+                <p class="cart-empty">Noch nichts ausgewählt.</p>
+              } @else {
+                <ul class="cart-items" role="list">
+                  @for (line of cart(); track line.key) {
+                    <li class="cart-item">
+                      <div class="cart-item-text">
+                        <span class="cart-item-name">{{ line.label }}</span>
+                        <span class="cart-item-price">{{ formatPrice(line.unitPrice * line.quantity) }}</span>
+                      </div>
+                      <div class="qty">
+                        <button type="button" class="btn btn-icon" (click)="decrement(line.key)" [attr.aria-label]="'Menge verringern: ' + line.label">−</button>
+                        <span class="qty-value" aria-live="polite">{{ line.quantity }}</span>
+                        <button type="button" class="btn btn-icon" (click)="increment(line.key)" [attr.aria-label]="'Menge erhöhen: ' + line.label">+</button>
+                        <button type="button" class="btn btn-link" (click)="remove(line.key)" [attr.aria-label]="'Entfernen: ' + line.label">Entfernen</button>
+                      </div>
+                    </li>
+                  }
+                </ul>
+                <div class="cart-total">
+                  <span>Summe</span>
+                  <strong data-testid="cart-total">{{ formatPrice(cartTotal()) }}</strong>
+                </div>
+              }
+            </div>
+
+            <label class="field">
+              <span class="field-label">Anmerkung (optional)</span>
+              <textarea formControlName="notes" rows="2" placeholder="z.B. Pizze ohne Zwiebeln"></textarea>
+            </label>
+
+            @if (submitError(); as err) {
+              <div class="alert alert-error" role="alert" data-testid="order-error">{{ err }}</div>
+            }
+            @if (submitSuccess()) {
+              <div class="alert alert-success" role="status" data-testid="order-success">Bestellung gespeichert. Danke!</div>
+            }
+
+            <button
+              type="submit"
+              class="btn btn-primary btn-large"
+              [disabled]="!canSubmit()"
+              data-testid="submit-order"
+            >
+              Bestellung absenden
+            </button>
+          </form>
+        } @else {
+          <p class="cart-disabled">Bestellungen sind aktuell geschlossen.</p>
+        }
+      </aside>
+    </section>
+  }
 </main>

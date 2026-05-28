@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AddData, AddResponses } from './types.gen';
+import type { GetMenuData, GetMenuResponses, GetOrderingWindowData, GetOrderingWindowResponses, GetOrdersForTodayData, GetOrdersForTodayResponses, PlaceOrderData, PlaceOrderResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -19,8 +19,28 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 /**
- * Adds two integers.
- *
- * Returns the sum of the left and right query parameters.
+ * Gibt die aktuelle Speisekarte zurück.
  */
-export const add = <ThrowOnError extends boolean = false>(options: Options<AddData, ThrowOnError>) => (options.client ?? client).get<AddResponses, unknown, ThrowOnError>({ url: '/api/calculator/add', ...options });
+export const getMenu = <ThrowOnError extends boolean = false>(options?: Options<GetMenuData, ThrowOnError>) => (options?.client ?? client).get<GetMenuResponses, unknown, ThrowOnError>({ url: '/api/menu', ...options });
+
+/**
+ * Gibt das aktuelle Bestellfenster zurück (Tag, ob offen, Cutoff-Zeit).
+ */
+export const getOrderingWindow = <ThrowOnError extends boolean = false>(options?: Options<GetOrderingWindowData, ThrowOnError>) => (options?.client ?? client).get<GetOrderingWindowResponses, unknown, ThrowOnError>({ url: '/api/ordering-window', ...options });
+
+/**
+ * Listet alle Bestellungen des aktuellen Tages.
+ */
+export const getOrdersForToday = <ThrowOnError extends boolean = false>(options?: Options<GetOrdersForTodayData, ThrowOnError>) => (options?.client ?? client).get<GetOrdersForTodayResponses, unknown, ThrowOnError>({ url: '/api/orders/today', ...options });
+
+/**
+ * Erstellt eine neue Bestellung für den aktuellen Tag.
+ */
+export const placeOrder = <ThrowOnError extends boolean = false>(options: Options<PlaceOrderData, ThrowOnError>) => (options.client ?? client).post<PlaceOrderResponses, unknown, ThrowOnError>({
+    url: '/api/orders',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});

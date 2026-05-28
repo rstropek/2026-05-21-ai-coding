@@ -10,6 +10,8 @@ import { client } from './api-client/client.gen';
 import { provideHeyApiClient } from './api-client/client/client.gen';
 import { routes } from './app.routes';
 
+client.setConfig({ baseUrl: '' });
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),

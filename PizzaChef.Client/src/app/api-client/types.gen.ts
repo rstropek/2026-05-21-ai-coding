@@ -4,25 +4,127 @@ export type ClientOptions = {
     baseUrl: 'http://localhost:5252/' | (string & {});
 };
 
-export type AddResponse = {
-    result: number | string;
+export type Menu = {
+    schemaVersion: number | string;
+    scrapedAt: string;
+    source: string;
+    currency: string;
+    categories: Array<MenuCategory>;
+    items: Array<MenuItem>;
+    allergenLegend: {
+        [key: string]: string;
+    };
 };
 
-export type AddData = {
+export type MenuCategory = {
+    id: string;
+    name: string;
+    sortOrder: number | string;
+};
+
+export type MenuItem = {
+    id: string;
+    categoryId: string;
+    name: string;
+    description: null | string;
+    price: number | string;
+    variants: Array<MenuItemVariant>;
+    allergens: Array<string>;
+    available: boolean;
+};
+
+export type MenuItemVariant = {
+    id: string;
+    name: string;
+    priceDelta: number | string;
+};
+
+export type NewOrder = {
+    employeeName: string;
+    items: Array<OrderLine>;
+    notes: null | string;
+};
+
+export type Order = {
+    id: string;
+    day: string;
+    createdAt: string;
+    employeeName: string;
+    items: Array<OrderLine>;
+    notes: null | string;
+};
+
+export type OrderingWindow = {
+    day: string;
+    isOpen: boolean;
+    cutoffLocal: string;
+    nowLocal: string;
+};
+
+export type OrderLine = {
+    itemId: string;
+    variantId: null | string;
+    quantity: number | string;
+};
+
+export type GetMenuData = {
     body?: never;
     path?: never;
-    query: {
-        left: number | string;
-        right: number | string;
-    };
-    url: '/api/calculator/add';
+    query?: never;
+    url: '/api/menu';
 };
 
-export type AddResponses = {
+export type GetMenuResponses = {
     /**
      * OK
      */
-    200: AddResponse;
+    200: Menu;
 };
 
-export type AddResponse2 = AddResponses[keyof AddResponses];
+export type GetMenuResponse = GetMenuResponses[keyof GetMenuResponses];
+
+export type GetOrderingWindowData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/ordering-window';
+};
+
+export type GetOrderingWindowResponses = {
+    /**
+     * OK
+     */
+    200: OrderingWindow;
+};
+
+export type GetOrderingWindowResponse = GetOrderingWindowResponses[keyof GetOrderingWindowResponses];
+
+export type GetOrdersForTodayData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/orders/today';
+};
+
+export type GetOrdersForTodayResponses = {
+    /**
+     * OK
+     */
+    200: Array<Order>;
+};
+
+export type GetOrdersForTodayResponse = GetOrdersForTodayResponses[keyof GetOrdersForTodayResponses];
+
+export type PlaceOrderData = {
+    body: NewOrder;
+    path?: never;
+    query?: never;
+    url: '/api/orders';
+};
+
+export type PlaceOrderResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
