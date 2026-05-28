@@ -1,3 +1,6 @@
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+
 [mcp_servers.angular]
 command = "npx"
 args = ["-y", "@angular/cli", "mcp"]
