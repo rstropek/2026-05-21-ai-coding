@@ -1,5 +1,6 @@
 {
   "enabledPlugins": {
     "microsoft-docs@claude-plugins-official": true
-  }
+  },
+  "enabledMcpjsonServers": ["angular-cli"]
 }
