@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { startWith } from 'rxjs/operators';
 
 import {
   getMenu,
@@ -51,6 +53,11 @@ export class App implements OnInit {
     notes: [''],
   });
 
+  private readonly formStatus = toSignal(
+    this.orderForm.statusChanges.pipe(startWith(this.orderForm.status)),
+    { initialValue: this.orderForm.status },
+  );
+
   protected readonly filteredCategories = computed<CategoryGroup[]>(() => {
     const m = this.menu();
     if (!m) {
@@ -78,7 +85,7 @@ export class App implements OnInit {
     return (
       this.window()?.isOpen === true &&
       this.cart().length > 0 &&
-      this.orderForm.valid
+      this.formStatus() === 'VALID'
     );
   });
 

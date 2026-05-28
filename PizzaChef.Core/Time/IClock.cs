@@ -9,3 +9,10 @@ public sealed class SystemClock : IClock
 {
     public DateTimeOffset UtcNow => DateTimeOffset.UtcNow;
 }
+
+public sealed class FixedClock : IClock
+{
+    public FixedClock(DateTimeOffset utcNow) => UtcNow = utcNow.ToUniversalTime();
+
+    public DateTimeOffset UtcNow { get; }
+}

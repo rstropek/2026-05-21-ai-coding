@@ -8,7 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services.Configure<StorageOptions>(builder.Configuration.GetSection("Storage"));
-builder.Services.AddSingleton<IClock, SystemClock>();
+builder.Services.Configure<ClockOptions>(builder.Configuration.GetSection("Clock"));
+builder.Services.AddSingleton<IClock>(sp =>
+{
+    var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<ClockOptions>>().Value;
+    return options.FixedNowUtc is { } fixedTime
+        ? new FixedClock(fixedTime)
+        : new SystemClock();
+});
 builder.Services.AddSingleton<IMenuRepository, FileMenuRepository>();
 builder.Services.AddSingleton<IOrderRepository, FileOrderRepository>();
 builder.Services.AddSingleton<IOrderingService, OrderingService>();

@@ -3,8 +3,7 @@ import { expect, test } from '@playwright/test';
 test('can place an order when the window is open', async ({ page }) => {
   await page.goto('/');
 
-  const isOpen = await page.locator('.status-open').count();
-  test.skip(isOpen === 0, 'Bestellfenster ist geschlossen — kann Bestellung nicht testen');
+  await expect(page.locator('.status-open')).toBeVisible();
 
   await page.getByTestId('add-pizza-margherita').click();
   await page.getByTestId('add-coca-cola-033').click();
